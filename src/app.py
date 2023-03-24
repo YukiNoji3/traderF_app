@@ -2,7 +2,8 @@
 import joblib
 import torch
 import torch.nn.functional as F
-import MeCab
+#import MeCab
+from janome.tokenizer import Tokenizer
 import pickle
 from wtforms import Form, StringField, SubmitField, validators
 #from animal import transform, Net # animal.py から前処理とネットワークの定義を読み込み
@@ -10,16 +11,22 @@ from flask import Flask, request, render_template
 #from sklearn.feature_extraction.text import CountVectorizer
 from tradeF import Net # tradeF.py から前処理とネットワークの定義を読み込み
 
-#分かち書きのためのmecabインスタンス作成
-mecab = MeCab.Tagger('-Owakati')
-
 #vectorizerの読み込み
 with open("./src/cnt_vec.pickle", "rb") as f:
     vectorizer = pickle.load(f)
 
+#janomeを使った分かち書きのための関数
+def tokenize(text):
+    t = Tokenizer()
+    # 改行コードを除去
+    text = text.replace('\n', '')
+    tokens = t.tokenize(text)
+    result = ' '.join([token.surface for token in tokens])
+    return result
+
 #テキストの前処理関数
 def text_to_tensor(text):
-  wakati_text = mecab.parse(text).strip()
+  wakati_text = tokenize(text)
   bow = vectorizer.transform([wakati_text]).toarray()
   tensor = torch.tensor(bow, dtype=torch.float32)
   return tensor
