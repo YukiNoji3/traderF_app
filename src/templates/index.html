@@ -1,0 +1,21 @@
+<title>Tweet Judge App</title>
+<style>
+#wrapper {
+    text-align: center;
+}
+</style>
+
+<div id="wrapper">
+  <h1>Tweetを入力して、<br>
+        株式購入に関する内容かどうか判定しよう</h1>
+  <form method="post">
+    {{ forms.csrf_token }}
+    {{ forms.TweetText.label }}<br>
+    {{ forms.TweetText }}<br>
+    {% for error in forms.TweetText.errors %}
+    <div>{{ error }}</div>
+    {% endfor %}<br>
+
+    {{ forms.submit }}
+  </form>
+</div>
