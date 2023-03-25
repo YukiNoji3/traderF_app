@@ -12,7 +12,7 @@ from flask import Flask, request, render_template
 from tradeF import Net # tradeF.py から前処理とネットワークの定義を読み込み
 
 #vectorizerの読み込み
-with open("./src/cnt_vec.pickle", "rb") as f:
+with open("./cnt_vec.pickle", "rb") as f:
     vectorizer = pickle.load(f)
 
 #janomeを使った分かち書きのための関数
@@ -35,7 +35,7 @@ def text_to_tensor(text):
 def predict(input_tensor):
     # 推論モードに切り替え
     net = Net().cpu().eval()
-    net.load_state_dict(torch.load('./src/tweet_judge.pt', map_location=torch.device('cpu'))) 
+    net.load_state_dict(torch.load('./tweet_judge.pt', map_location=torch.device('cpu'))) 
     
     # 推論の実行
     with torch.no_grad():
